@@ -1,6 +1,6 @@
 forward OnPlayerAccountLoaded(playerid, race_check);
 public OnPlayerAccountLoaded(playerid, race_check) {
-	Logger_Log("Dumating sa OnPlayerAccountLoaded");
+	// Logger_Log("Dumating sa OnPlayerAccountLoaded");
 	if (race_check != g_MysqlRaceCheck[playerid]) return Kick(playerid);
 
 	orm_setkey(Player[playerid][ORM_ID], "id");
@@ -38,10 +38,10 @@ public OnPlayerRegister(playerid) {
 forward OnPasswordHashed(playerid);
 public OnPasswordHashed(playerid) {
 	bcrypt_get_hash(Player[playerid][Password]);
-	Logger_Log("OnPasswordHashed",Logger_S("Password hashed", Player[playerid][Password]));
+	// Logger_Log("OnPasswordHashed",Logger_S("Password hashed", Player[playerid][Password]));
 
 	orm_save(Player[playerid][ORM_ID], "OnPlayerRegister", "d", playerid);
-	Logger_Log("Registered na tpos na bcryt na din", Logger_S("Password na nahash", Player[playerid][Password]));
+	// Logger_Log("Registered na tpos na bcryt na din", Logger_S("Password na nahash", Player[playerid][Password]));
 	return 1;
 }
 
@@ -50,7 +50,7 @@ public OnPasswordChecked(playerid) {
 	new bool: match = bcrypt_is_equal();
 
 	if(match) {
-		Logger_Log("Password Match");
+		// Logger_Log("Password Match");
 		SendClientMessage(playerid, -1, "[SERVER] You are now logged");
 
 		Player[playerid][IsLoggedIn] = true;
@@ -66,7 +66,7 @@ public OnPasswordChecked(playerid) {
 		} else {
 			ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Login", "Password is incorrect. Please enter your password:", "Login", "Abort");
 		}
-		Logger_Log("Did NOT Match");
+		// Logger_Log("Did NOT Match");
 	}
 
 	return 1;
@@ -88,5 +88,17 @@ public UpdatePlayerData(playerid, reason) {
 
 	orm_save(Player[playerid][ORM_ID]);
 	orm_destroy(Player[playerid][ORM_ID]);
+	return 1;
+}
+
+forward UpdatePlayerDataOnBuyVehicle(playerid);
+public UpdatePlayerDataOnBuyVehicle(playerid) {
+	if(Player[playerid][IsLoggedIn] == false) {
+		return 0;
+	}
+
+	Player[playerid][Cash] = GetPlayerMoney(playerid);
+
+	orm_save(Player[playerid][ORM_ID]);
 	return 1;
 }
