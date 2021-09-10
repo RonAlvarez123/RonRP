@@ -13,6 +13,14 @@
 #define MINIMUM_PASSWORD_LENGTH		5
 #define MINIMUM_LOGIN_ATTEMPTS		3
 
+#define DEFAULT_VEHICLE_DEALERSHIP_ACCOUNT_ID   -1
+#define DEFAULT_VEHICLE_DEALERSHIP_OWNER        "Dealership"
+#define DEFAULT_VEHICLE_DEALERSHIP_HAS_LOCK     false
+#define DEFAULT_VEHICLE_DEALERSHIP_COLOR1        0x0000FFFF
+#define DEFAULT_VEHICLE_DEALERSHIP_COLOR2        0x00FF00FF
+
+#define DEFAULT_SERVER_MESSAGE_COLOR            0xFC4E03FF
+
 enum accounts
 {
 	ORM: ORM_ID,
@@ -51,8 +59,8 @@ enum vehicles {
 	Float: Z_Pos,
 	Float: Angle,
 
-	session_ID
-	Text3D: Label,
+	session_ID,
+	Text3D: Label
 }
 
 enum dialogs {
