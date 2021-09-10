@@ -7,7 +7,7 @@ public DBSetupAccountsTable(MySQL: DBconnection) {
 
 forward DBSetupVehiclesTable(MySQL: DBconnection);
 public DBSetupVehiclesTable(MySQL: DBconnection) {
-    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `vehicles` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `model` tinyint(4) NOT NULL, `name` varchar(24) NOT NULL, `owner` varchar(24) DEFAULT NULL, `price` int(11) NOT NULL, `hasLock` tinyint(1) NOT NULL DEFAULT 0, `color1` varchar(24) NOT NULL DEFAULT '000000', `color2` varchar(24) NOT NULL DEFAULT '000000', `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, PRIMARY KEY (`id`))");
+    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `vehicles` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `model` int(11) NOT NULL, `name` varchar(24) NOT NULL, `owner` varchar(24) DEFAULT NULL, `price` int(11) NOT NULL, `hasLock` tinyint(1) NOT NULL DEFAULT 0, `color1` varchar(24) NOT NULL DEFAULT '000000', `color2` varchar(24) NOT NULL DEFAULT '000000', `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, PRIMARY KEY (`id`))");
     print("Vehicles Table Setup Finished!");
     return 1;
 }
@@ -28,18 +28,20 @@ public ORMSetupAccountsTable(ORM: TableModel, playerid) {
     return 1;
 }
 
-// forward ORMSetupVehiclesTable(ORM: TableModel, vehicleid);
-// public ORMSetupVehiclesTable(ORM: TableModel, vehicleid) {
-//     orm_addvar_int(TableModel, Vehicle[vehicleid][ID], "id");
-// 	orm_addvar_string(TableModel, Vehicle[vehicleid][Username], MAX_PLAYER_NAME, "username");
-// 	orm_addvar_string(TableModel, Vehicle[vehicleid][Password], 65, "password");
-// 	orm_addvar_int(TableModel, Vehicle[vehicleid][Cash], "cash");
-// 	orm_addvar_int(TableModel, Vehicle[vehicleid][Kills], "kills");
-// 	orm_addvar_int(TableModel, Vehicle[vehicleid][Deaths], "death");
-// 	orm_addvar_float(TableModel, Vehicle[vehicleid][X_Pos], "x");
-// 	orm_addvar_float(TableModel, Vehicle[vehicleid][Y_Pos], "y");
-// 	orm_addvar_float(TableModel, Vehicle[vehicleid][Z_Pos], "z");
-// 	orm_addvar_float(TableModel, Vehicle[vehicleid][Angle], "angle");
-// 	orm_addvar_int(TableModel, Vehicle[vehicleid][Interior], "interior");
-//     return 1;
-// }
+forward ORMSetupVehiclesTable(ORM: TableModel, vehicleid);
+public ORMSetupVehiclesTable(ORM: TableModel, vehicleid) {
+    orm_addvar_int(TableModel, Vehicle[vehicleid][ID], "id");
+    orm_addvar_int(TableModel, Vehicle[vehicleid][Account_ID], "account_id");
+    orm_addvar_int(TableModel, Vehicle[vehicleid][Model], "model");
+	orm_addvar_string(TableModel, Vehicle[vehicleid][Name], MAX_PLAYER_NAME, "name");
+	orm_addvar_string(TableModel, Vehicle[vehicleid][Owner], MAX_PLAYER_NAME, "owner");
+	orm_addvar_int(TableModel, Vehicle[vehicleid][Price], "price");
+	orm_addvar_int(TableModel, Vehicle[vehicleid][hasLock], "hasLock");
+	orm_addvar_string(TableModel, Vehicle[vehicleid][Color1], MAX_PLAYER_NAME, "color1");
+	orm_addvar_string(TableModel, Vehicle[vehicleid][Color2], MAX_PLAYER_NAME, "color2");
+	orm_addvar_float(TableModel, Vehicle[vehicleid][X_Pos], "x");
+	orm_addvar_float(TableModel, Vehicle[vehicleid][Y_Pos], "y");
+	orm_addvar_float(TableModel, Vehicle[vehicleid][Z_Pos], "z");
+	orm_addvar_float(TableModel, Vehicle[vehicleid][Angle], "angle");
+    return 1;
+}
