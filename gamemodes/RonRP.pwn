@@ -17,7 +17,8 @@ new Vehicle[MAX_VEHICLES][vehicles];
 #include "includes/db_setup"
 #include "includes/auth"
 #include "includes/dialog"
-#include "includes/vehicles"
+#include "includes/vehicle_utilities"
+#include "includes/vehicle_methods"
 #include "includes/commands"
 
 main()
@@ -50,6 +51,9 @@ public OnGameModeInit()
 
     DBSetupAccountsTable(conn);
     DBSetupVehiclesTable(conn);
+
+    getAllServerVehicle(conn);
+    getAllDealershipVehicle(conn);
 	return 1;
 }
 
@@ -262,7 +266,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(!response) return Kick(playerid);
 
 			// bcrypt_hash("admin123", BCRYPT_COST, "OnPasswordHashed");
-			Logger_Log("DIALOG_LOGIN", Logger_S("Inputtext", inputtext));
+			// Logger_Log("DIALOG_LOGIN", Logger_S("Inputtext", inputtext));
 			bcrypt_check(inputtext, Player[playerid][Password], "OnPasswordChecked", "d", playerid);
 			return 1;
 		}
