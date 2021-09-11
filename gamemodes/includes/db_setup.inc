@@ -28,20 +28,38 @@ public ORMSetupAccountsTable(ORM: TableModel, playerid) {
     return 1;
 }
 
-forward ORMSetupVehiclesTable(ORM: TableModel, vehicleid);
-public ORMSetupVehiclesTable(ORM: TableModel, vehicleid) {
-    orm_addvar_int(TableModel, Vehicle[vehicleid][ID], "id");
-    orm_addvar_int(TableModel, Vehicle[vehicleid][Account_ID], "account_id");
-    orm_addvar_int(TableModel, Vehicle[vehicleid][Model], "model");
-	orm_addvar_string(TableModel, Vehicle[vehicleid][Name], MAX_PLAYER_NAME, "name");
-	orm_addvar_string(TableModel, Vehicle[vehicleid][Owner], MAX_PLAYER_NAME, "owner");
-	orm_addvar_int(TableModel, Vehicle[vehicleid][Price], "price");
-	orm_addvar_int(TableModel, Vehicle[vehicleid][hasLock], "hasLock");
-	orm_addvar_string(TableModel, Vehicle[vehicleid][Color1], MAX_PLAYER_NAME, "color1");
-	orm_addvar_string(TableModel, Vehicle[vehicleid][Color2], MAX_PLAYER_NAME, "color2");
-	orm_addvar_float(TableModel, Vehicle[vehicleid][X_Pos], "x");
-	orm_addvar_float(TableModel, Vehicle[vehicleid][Y_Pos], "y");
-	orm_addvar_float(TableModel, Vehicle[vehicleid][Z_Pos], "z");
-	orm_addvar_float(TableModel, Vehicle[vehicleid][Angle], "angle");
+forward ORMSetupServerVehiclesTable(ORM: TableModel, i);
+public ORMSetupServerVehiclesTable(ORM: TableModel, i) {
+    orm_addvar_int(TableModel, ServerVehicle[i][ID], "id");
+    orm_addvar_int(TableModel, ServerVehicle[i][Account_ID], "account_id");
+    orm_addvar_int(TableModel, ServerVehicle[i][Model], "model");
+	orm_addvar_string(TableModel, ServerVehicle[i][Name], MAX_PLAYER_NAME, "name");
+	orm_addvar_string(TableModel, ServerVehicle[i][Owner], MAX_PLAYER_NAME, "owner");
+	orm_addvar_int(TableModel, ServerVehicle[i][Price], "price");
+	orm_addvar_int(TableModel, ServerVehicle[i][hasLock], "hasLock");
+	orm_addvar_string(TableModel, ServerVehicle[i][Color1], MAX_PLAYER_NAME, "color1");
+	orm_addvar_string(TableModel, ServerVehicle[i][Color2], MAX_PLAYER_NAME, "color2");
+	orm_addvar_float(TableModel, ServerVehicle[i][X_Pos], "x");
+	orm_addvar_float(TableModel, ServerVehicle[i][Y_Pos], "y");
+	orm_addvar_float(TableModel, ServerVehicle[i][Z_Pos], "z");
+	orm_addvar_float(TableModel, ServerVehicle[i][Angle], "angle");
+    return 1;
+}
+
+forward ORMSetupPlayerVehiclesTable(ORM: TableModel, playerid, i);
+public ORMSetupPlayerVehiclesTable(ORM: TableModel, playerid, i) {
+    orm_addvar_int(TableModel, PlayerVehicle[playerid][i][ID], "id");
+    orm_addvar_int(TableModel, PlayerVehicle[playerid][i][Account_ID], "account_id");
+    orm_addvar_int(TableModel, PlayerVehicle[playerid][i][Model], "model");
+	orm_addvar_string(TableModel, PlayerVehicle[playerid][i][Name], MAX_PLAYER_NAME, "name");
+	orm_addvar_string(TableModel, PlayerVehicle[playerid][i][Owner], MAX_PLAYER_NAME, "owner");
+	orm_addvar_int(TableModel, PlayerVehicle[playerid][i][Price], "price");
+	orm_addvar_int(TableModel, PlayerVehicle[playerid][i][hasLock], "hasLock");
+	orm_addvar_string(TableModel, PlayerVehicle[playerid][i][Color1], MAX_PLAYER_NAME, "color1");
+	orm_addvar_string(TableModel, PlayerVehicle[playerid][i][Color2], MAX_PLAYER_NAME, "color2");
+	orm_addvar_float(TableModel, PlayerVehicle[playerid][i][X_Pos], "x");
+	orm_addvar_float(TableModel, PlayerVehicle[playerid][i][Y_Pos], "y");
+	orm_addvar_float(TableModel, PlayerVehicle[playerid][i][Z_Pos], "z");
+	orm_addvar_float(TableModel, PlayerVehicle[playerid][i][Angle], "angle");
     return 1;
 }
