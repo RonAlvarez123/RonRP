@@ -12,7 +12,9 @@ new MySQL:conn;
 new Player[MAX_PLAYERS][accounts];
 new g_MysqlRaceCheck[MAX_PLAYERS];
 
-new Vehicle[MAX_VEHICLES][vehicles];
+new ServerVehicle[MAX_VEHICLES][vehicles];
+new PlayerVehicle[MAX_PLAYERS][MAX_VEHICLES_PER_PLAYER][vehicles];
+new ServerTotalVehicles;
 
 #include "includes/db_setup"
 #include "includes/auth"
@@ -27,9 +29,14 @@ main()
 	print(" Blank Gamemode by your name here");
 	print("----------------------------------\n");
 
-    new vehicleNameKo[MAX_PLAYER_NAME];
-    getVehicleName(523, vehicleNameKo);
-    printf("Name of vehicle is %s", vehicleNameKo);
+    // new vehicleNameKo[MAX_PLAYER_NAME];
+    // getVehicleName(523, vehicleNameKo);
+    // printf("Name of vehicle is %s", vehicleNameKo);
+
+	// new string[128];
+	// format(string, sizeof string, " ");
+	// new lengthofstring = strlen(string);
+	// printf("String length is %d", lengthofstring);
 }
 
 public OnGameModeInit()
@@ -53,7 +60,6 @@ public OnGameModeInit()
     DBSetupVehiclesTable(conn);
 
     getAllServerVehicle(conn);
-    getAllDealershipVehicle(conn);
 	return 1;
 }
 
@@ -100,6 +106,7 @@ public OnPlayerDisconnect(playerid, reason)
 public OnPlayerSpawn(playerid)
 {
     GivePlayerMoney(playerid, Player[playerid][Cash]);
+	getAllPlayerVehData(conn, playerid);
 	return 1;
 }
 
@@ -279,6 +286,34 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			}
 
 			bcrypt_hash(inputtext, BCRYPT_COST, "OnPasswordHashed", "d", playerid);
+		}
+
+		case DIALOG_VEHICLE_STORAGE: {
+			if(!response) {
+				return 1;
+			}
+
+			new string[128];
+
+			if(PlayerVehicle[playerid][listitem][isSpawned]) {
+				DestroyVehicle(PlayerVehicle[playerid][listitem][session_ID]);
+				PlayerVehicle[playerid][listitem][isSpawned] = false;
+				Player[playerid][SpawnedVehicles]--;
+				format(string, sizeof string, "You have stored your %s.", PlayerVehicle[playerid][listitem][Name]);
+				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
+			} else {
+				new vehicleid, color1[MAX_PLAYER_NAME], color2[MAX_PLAYER_NAME];
+				format(color1, sizeof color1, "0x%sFF", PlayerVehicle[playerid][listitem][Color1]);
+				format(color2, sizeof color2, "0x%sFF", PlayerVehicle[playerid][listitem][Color2]);
+
+				vehicleid = CreateVehicle(PlayerVehicle[playerid][listitem][Model], PlayerVehicle[playerid][listitem][X_Pos], PlayerVehicle[playerid][listitem][Y_Pos], PlayerVehicle[playerid][listitem][Z_Pos], PlayerVehicle[playerid][listitem][Angle], PlayerVehicle[playerid][listitem][Color1], PlayerVehicle[playerid][listitem][Color2], -1, 0);
+				PlayerVehicle[playerid][listitem][session_ID] = vehicleid;
+				PlayerVehicle[playerid][listitem][isSpawned] = true;
+				Player[playerid][SpawnedVehicles]++;
+
+				format(string, sizeof string, "You have taken your %s out of your vstorage.", PlayerVehicle[playerid][listitem][Name]);
+				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
+			}
 		}
 
 		default: return 0;
