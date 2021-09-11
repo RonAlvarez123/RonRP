@@ -302,11 +302,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				format(string, sizeof string, "You have stored your %s.", PlayerVehicle[playerid][listitem][Name]);
 				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
 			} else {
-				new vehicleid, color1[MAX_PLAYER_NAME], color2[MAX_PLAYER_NAME];
-				format(color1, sizeof color1, "0x%sFF", PlayerVehicle[playerid][listitem][Color1]);
-				format(color2, sizeof color2, "0x%sFF", PlayerVehicle[playerid][listitem][Color2]);
-
+				new vehicleid;
 				vehicleid = CreateVehicle(PlayerVehicle[playerid][listitem][Model], PlayerVehicle[playerid][listitem][X_Pos], PlayerVehicle[playerid][listitem][Y_Pos], PlayerVehicle[playerid][listitem][Z_Pos], PlayerVehicle[playerid][listitem][Angle], PlayerVehicle[playerid][listitem][Color1], PlayerVehicle[playerid][listitem][Color2], -1, 0);
+				
 				PlayerVehicle[playerid][listitem][session_ID] = vehicleid;
 				PlayerVehicle[playerid][listitem][isSpawned] = true;
 				Player[playerid][SpawnedVehicles]++;
