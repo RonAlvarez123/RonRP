@@ -26,12 +26,14 @@ public getVehicleName(vehicleid, vehicleName[MAX_PLAYER_NAME]) {
 
 forward getAllServerVehicle(MySQL: DBconnection);
 public getAllServerVehicle(MySQL: DBconnection) {
-    mysql_tquery(DBconnection, "SELECT * FROM `vehicles` WHERE `account_id` = '0'", "OnGetAllServerVehicle");
+    mysql_tquery(DBconnection, "SELECT * FROM `vehicles` WHERE `account_id` = '-1' OR `account_id` = '-2'", "OnGetAllServerVehicle");
     return 1;
 }
 
-forward getAllDealershipVehicle(MySQL: DBconnection);
-public getAllDealershipVehicle(MySQL: DBconnection) {
-    mysql_tquery(DBconnection, "SELECT * FROM `vehicles` WHERE `account_id` = '-1'", "OnGetAllDealershipVehicle");
+forward getAllPlayerVehData(MySQL: DBconnection, playerid);
+public getAllPlayerVehData(MySQL: DBconnection, playerid) {
+    new query[300];
+    mysql_format(DBconnection, query, sizeof query, "SELECT * FROM `vehicles` WHERE `account_id` = '%d'", Player[playerid][ID]);
+    mysql_tquery(DBconnection, query, "OnGetAllPlayerVehData", "d", playerid);
     return 1;
 }
