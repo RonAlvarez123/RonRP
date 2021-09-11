@@ -13,6 +13,8 @@
 #define MINIMUM_PASSWORD_LENGTH		5
 #define MINIMUM_LOGIN_ATTEMPTS		3
 
+#define MAX_VEHICLES_PER_PLAYER		5
+
 #define DEFAULT_VEHICLE_DEALERSHIP_ACCOUNT_ID   -1
 #define DEFAULT_VEHICLE_DEALERSHIP_OWNER        "Dealership"
 #define DEFAULT_VEHICLE_DEALERSHIP_HAS_LOCK     false
@@ -38,6 +40,8 @@ enum accounts
 	Interior,
 
 	bool: IsLoggedIn,
+	TotalVehicles,
+	SpawnedVehicles,
 	LoginAttempts,
 	LoginTimer
 };
@@ -60,12 +64,14 @@ enum vehicles {
 	Float: Angle,
 
 	session_ID,
-	Text3D: Label
+	Text3D: Label,
+	bool: isSpawned
 }
 
 enum dialogs {
 	DIALOG_UNUSED,
 	DIALOG_CHANGENAME,
 	DIALOG_LOGIN,
-	DIALOG_REGISTER
+	DIALOG_REGISTER,
+	DIALOG_VEHICLE_STORAGE
 };
