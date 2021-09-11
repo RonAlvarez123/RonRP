@@ -108,12 +108,19 @@ COMMAND:buyvehicle(playerid) {
     new vehicleid;
     vehicleid = GetPlayerVehicleID(playerid);
 
-    if(ServerVehicle[vehicleid][Account_ID] != -1) {
+    new iteration = -1;
+    for(new i = 0; i < ServerTotalVehicles; i++) {
+        if(ServerVehicle[i][session_ID] == vehicleid) {
+            iteration = i;
+        }
+    }
+
+    if(iteration == -1) {
         return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "This vehicle is not for sale.");
     }
 
     Player[playerid][Cash] = GetPlayerMoney(playerid);
-    if(Player[playerid][Cash] < ServerVehicle[vehicleid][Price]) {
+    if(Player[playerid][Cash] < ServerVehicle[iteration][Price]) {
         return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You don't have enough money to buy this vehicle.");
     }
 
@@ -139,7 +146,7 @@ COMMAND:buyvehicle(playerid) {
     vehicleZ = 13.3993;
     vehicleAngle = 173.2735;
 
-    mysql_format(conn, query, sizeof query, "INSERT INTO `vehicles` (`account_id`, `model`, `name`, `owner`, `price`, `x`, `y`, `z`, `angle`) VALUES ('%d', '%d', '%s', '%s', '%d', '%f', '%f', '%f', '%f')", Player[playerid][ID], ServerVehicle[vehicleid][Model], ServerVehicle[vehicleid][Name], Player[playerid][Username], ServerVehicle[vehicleid][Price], vehicleX, vehicleY, vehicleZ, vehicleAngle);
+    mysql_format(conn, query, sizeof query, "INSERT INTO `vehicles` (`account_id`, `model`, `name`, `owner`, `price`, `x`, `y`, `z`, `angle`) VALUES ('%d', '%d', '%s', '%s', '%d', '%f', '%f', '%f', '%f')", Player[playerid][ID], ServerVehicle[iteration][Model], ServerVehicle[iteration][Name], Player[playerid][Username], ServerVehicle[iteration][Price], vehicleX, vehicleY, vehicleZ, vehicleAngle);
     mysql_query(conn, query);
 
     new insert_id = cache_insert_id();
@@ -147,11 +154,11 @@ COMMAND:buyvehicle(playerid) {
         return SendClientMessage(playerid, -1, "[Onbuyvehicle]: There was an error.");
     }
     
-    new vehiclePrice = ServerVehicle[vehicleid][Price];
+    new vehiclePrice = ServerVehicle[iteration][Price];
 	vehiclePrice *= -1;
     GivePlayerMoney(playerid, vehiclePrice);
 
-    vehicleid = CreateVehicle(ServerVehicle[vehicleid][Model], vehicleX, vehicleY, vehicleZ, vehicleAngle, DEFAULT_VEHICLE_DEALERSHIP_COLOR1,DEFAULT_VEHICLE_DEALERSHIP_COLOR2, -1, 0);
+    vehicleid = CreateVehicle(ServerVehicle[iteration][Model], vehicleX, vehicleY, vehicleZ, vehicleAngle, DEFAULT_VEHICLE_DEALERSHIP_COLOR1,DEFAULT_VEHICLE_DEALERSHIP_COLOR2, -1, 0);
     // HERE
     new playerTotalVehicles = Player[playerid][TotalVehicles];
     Player[playerid][TotalVehicles]++;
