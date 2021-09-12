@@ -37,3 +37,15 @@ public getAllPlayerVehData(MySQL: DBconnection, playerid) {
     mysql_tquery(DBconnection, query, "OnGetAllPlayerVehData", "d", playerid);
     return 1;
 }
+
+forward despawnAllPlayerVehicles(playerid);
+public despawnAllPlayerVehicles(playerid) {
+    new const empty_vehicle[vehicles];
+    for(new i = 0; i < Player[playerid][TotalVehicles]; i++) {
+        if(PlayerVehicle[playerid][i][isSpawned] == true) {
+            DestroyVehicle(PlayerVehicle[playerid][i][session_ID]);
+        }
+        PlayerVehicle[playerid][i] = empty_vehicle;
+    }
+    return 1;
+}
