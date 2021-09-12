@@ -40,6 +40,7 @@ enum accounts
 	Interior,
 
 	bool: IsLoggedIn,
+	bool: Respawned,
 	TotalVehicles,
 	SpawnedVehicles,
 	LoginAttempts,
