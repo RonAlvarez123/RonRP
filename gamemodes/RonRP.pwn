@@ -100,13 +100,18 @@ public OnPlayerDisconnect(playerid, reason)
 
 	UpdatePlayerData(playerid, reason);
 	Player[playerid][IsLoggedIn] = false;
+
+	despawnAllPlayerVehicles(playerid);
 	return 1;
 }
 
 public OnPlayerSpawn(playerid)
 {
-    GivePlayerMoney(playerid, Player[playerid][Cash]);
-	getAllPlayerVehData(conn, playerid);
+    if(Player[playerid][Respawned] == false) {
+		Player[playerid][Respawned] = true;
+		GivePlayerMoney(playerid, Player[playerid][Cash]);
+		getAllPlayerVehData(conn, playerid);
+	}
 	return 1;
 }
 
@@ -304,7 +309,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			} else {
 				new vehicleid;
 				vehicleid = CreateVehicle(PlayerVehicle[playerid][listitem][Model], PlayerVehicle[playerid][listitem][X_Pos], PlayerVehicle[playerid][listitem][Y_Pos], PlayerVehicle[playerid][listitem][Z_Pos], PlayerVehicle[playerid][listitem][Angle], PlayerVehicle[playerid][listitem][Color1], PlayerVehicle[playerid][listitem][Color2], -1, 0);
-				
+
 				PlayerVehicle[playerid][listitem][session_ID] = vehicleid;
 				PlayerVehicle[playerid][listitem][isSpawned] = true;
 				Player[playerid][SpawnedVehicles]++;
