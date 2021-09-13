@@ -7,7 +7,7 @@ public DBSetupAccountsTable(MySQL: DBconnection) {
 
 forward DBSetupVehiclesTable(MySQL: DBconnection);
 public DBSetupVehiclesTable(MySQL: DBconnection) {
-    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `vehicles` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `model` int(11) NOT NULL, `name` varchar(24) NOT NULL, `owner` varchar(24) DEFAULT NULL, `price` int(11) NOT NULL, `hasLock` tinyint(1) NOT NULL DEFAULT 0, `color1` tinyint(1) NOT NULL DEFAULT 0, `color2` tinyint(1) NOT NULL DEFAULT 0, `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, PRIMARY KEY (`id`))");
+    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `vehicles` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `model` int(11) NOT NULL, `name` varchar(24) NOT NULL, `owner` varchar(24) DEFAULT NULL, `price` int(11) NOT NULL, `hasLock` tinyint(1) NOT NULL DEFAULT 0, `color1` int(11) NOT NULL DEFAULT 0, `color2` int(11) NOT NULL DEFAULT 0, `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, PRIMARY KEY (`id`))");
     print("Vehicles Table Setup Finished!");
     return 1;
 }
