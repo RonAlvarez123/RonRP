@@ -158,7 +158,7 @@ COMMAND:buyvehicle(playerid) {
 	vehiclePrice *= -1;
     GivePlayerMoney(playerid, vehiclePrice);
 
-    vehicleid = CreateVehicle(ServerVehicle[iteration][Model], vehicleX, vehicleY, vehicleZ, vehicleAngle, DEFAULT_VEHICLE_DEALERSHIP_COLOR1,DEFAULT_VEHICLE_DEALERSHIP_COLOR2, -1, 0);
+    vehicleid = CreateVehicle(ServerVehicle[iteration][Model], vehicleX, vehicleY, vehicleZ, vehicleAngle, DEFAULT_VEHICLE_DEALERSHIP_COLOR1, DEFAULT_VEHICLE_DEALERSHIP_COLOR2, -1, 0);
     // HERE
     new playerTotalVehicles = Player[playerid][TotalVehicles];
     Player[playerid][TotalVehicles]++;
@@ -197,5 +197,27 @@ COMMAND:vstorage(playerid) {
     }
 
     ShowPlayerDialog(playerid, DIALOG_VEHICLE_STORAGE, DIALOG_STYLE_TABLIST_HEADERS, "Vehicle Storage", string, "Spawn/Store", "Cancel");
+    return 1;
+}
+
+COMMAND:changevehiclecolor(playerid, params[]) {
+    new vehicleid, color1, color2;
+    if(sscanf(params, "ii", color1, color2)) {
+		return SendClientMessage(playerid, -1, "Usage: /changevehiclecolor <color1> <color2>");
+    }
+
+    if((color1 < 0 || color1 > 255) || (color2 < 0 || color2 > 255)) {
+        return SendClientMessage(playerid, -1, "Please choose a color value from 0 to 255.");
+    }
+    vehicleid = GetPlayerVehicleID(playerid);
+    ChangeVehicleColor(vehicleid, color1, color2);
+    return 1;
+}
+
+COMMAND:getmats(playerid) {
+    if(!IsPlayerInRangeOfPoint(playerid, 2, 1805.2272, -1904.5685, 13.4001)) {
+        return SendClientMessage(playerid, -1, "You are out of range.");
+    }
+    SendClientMessage(playerid, -1, "You can get mats.");
     return 1;
 }
