@@ -60,6 +60,10 @@ public OnGameModeInit()
     DBSetupVehiclesTable(conn);
 
     getAllServerVehicle(conn);
+
+	// AddPlayerClass(299,1805.2272,-1904.5685,13.4001,92.8548,0,0,0,0,0,0); // objectposition
+	CreatePickup(1239, 1, 1805.2272, -1904.5685, 13.4001, 0);
+	Create3DTextLabel("/getmats", 0xFF0000FF, 1805.2272, -1904.5685, 13.4001, 10, 0, 0);
 	return 1;
 }
 
@@ -192,6 +196,9 @@ public OnPlayerObjectMoved(playerid, objectid)
 
 public OnPlayerPickUpPickup(playerid, pickupid)
 {
+	new string[128];
+	format(string, sizeof string, "You have pickuped a pickup with id = %d", pickupid);
+	SendClientMessage(playerid, -1, string);
 	return 1;
 }
 
@@ -308,7 +315,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
 			} else {
 				new vehicleid;
-				vehicleid = CreateVehicle(PlayerVehicle[playerid][listitem][Model], PlayerVehicle[playerid][listitem][X_Pos], PlayerVehicle[playerid][listitem][Y_Pos], PlayerVehicle[playerid][listitem][Z_Pos], PlayerVehicle[playerid][listitem][Angle], PlayerVehicle[playerid][listitem][Color1], PlayerVehicle[playerid][listitem][Color2], -1, 0);
+				vehicleid = CreateVehicle(PlayerVehicle[playerid][listitem][Model], PlayerVehicle[playerid][listitem][X_Pos], PlayerVehicle[playerid][listitem][Y_Pos], PlayerVehicle[playerid][listitem][Z_Pos], PlayerVehicle[playerid][listitem][Angle], strval(PlayerVehicle[playerid][listitem][Color1]), strval(PlayerVehicle[playerid][listitem][Color2]), -1, 0);
 
 				PlayerVehicle[playerid][listitem][session_ID] = vehicleid;
 				PlayerVehicle[playerid][listitem][isSpawned] = true;
