@@ -7,11 +7,11 @@
 		"sampctl/samp-stdlib",
 		"YashasSamaga/I-ZCMD",
 		"pawn-lang/sa-mp-fixes",
-		"Y-Less/sscanf",
-		"pBlueG/SA-MP-MySQL",
+		"Y-Less/sscanf:2.10.2-r2",
+		"pBlueG/SA-MP-MySQL:R41-4",
 		"pawn-lang/YSI-Includes",
 		"Southclaws/samp-logger",
-		"lassir/bcrypt-samp"
+		"lassir/bcrypt-samp:v2.2.3"
 	],
 	"local": true,
 	"runtime": {
