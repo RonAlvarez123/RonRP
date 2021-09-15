@@ -49,6 +49,17 @@ enum accounts
 	LoginTimer
 };
 
+enum players {
+	ORM: ORM_ID,
+
+	ID,
+	Account_ID,
+	Job1[100],
+	Job2[100],
+	Material_Packages,
+	Materials
+};
+
 enum vehicles {
 	ORM: ORM_ID,
 
