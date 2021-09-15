@@ -23,6 +23,8 @@
 
 #define DEFAULT_SERVER_MESSAGE_COLOR            0xFC4E03FF
 
+#define COLOR_WHITE			0xFFFFFFFF
+
 enum accounts
 {
 	ORM: ORM_ID,
