@@ -25,6 +25,8 @@ public OnPlayerRegister(playerid) {
 	ShowPlayerDialog(playerid, DIALOG_UNUSED, DIALOG_STYLE_MSGBOX, "Registration", "Account successfully registered, you have been automatically logged in.", "Okay", "");
 	Account[playerid][IsLoggedIn] = true;
 
+	CreateDataOnPlayersTable(conn, playerid);
+
 	Account[playerid][X_Pos] = DEFAULT_POS_X;
 	Account[playerid][Y_Pos] = DEFAULT_POS_Y;
 	Account[playerid][Z_Pos] = DEFAULT_POS_Z;
@@ -55,6 +57,10 @@ public OnPasswordChecked(playerid) {
 
 		Account[playerid][IsLoggedIn] = true;
 
+		Player[playerid][Account_ID] = Account[playerid][ID];
+		orm_setkey(Player[playerid][ORM_ID], "account_id");
+		orm_load(Player[playerid][ORM_ID], "OnPlayersTableDataLoaded", "d", playerid);
+
 		SetSpawnInfo(playerid, NO_TEAM, 299, Account[playerid][X_Pos], Account[playerid][Y_Pos], Account[playerid][Z_Pos], Account[playerid][Angle], 0, 0, 0, 0, 0, 0);
 		SpawnPlayer(playerid);
 	} else {
@@ -69,6 +75,26 @@ public OnPasswordChecked(playerid) {
 		// Logger_Log("Did NOT Match");
 	}
 
+	return 1;
+}
+
+forward OnPlayersTableDataLoaded(playerid);
+public OnPlayersTableDataLoaded(playerid) {
+	new string[128];
+	format(string, sizeof string, "[OnPlayersTableDataLoaded]: Your account id is %d. And your job1 is %s. Your materials are %d.", Player[playerid][Account_ID], Player[playerid][Job1], Player[playerid][Materials]);
+	SendClientMessage(playerid, -1, string);
+}
+
+forward OnCreateDataOnPlayersTable(playerid);
+public OnCreateDataOnPlayersTable(playerid) {
+	if(cache_insert_id() <= 0) {
+		print("[OnCreateDataOnPlayersTable]: Cache_Insert_ID is less than or equal to 0");
+		return 1;
+	}
+
+	Player[playerid][ID] = cache_insert_id();
+	orm_setkey(Player[playerid][ORM_ID], "id");
+	orm_load(Player[playerid][ORM_ID], "OnPlayersTableDataLoaded", "d", playerid);
 	return 1;
 }
 
@@ -100,5 +126,13 @@ public UpdatePlayerDataOnBuyVehicle(playerid) {
 	Account[playerid][Cash] = GetPlayerMoney(playerid);
 
 	orm_save(Account[playerid][ORM_ID]);
+	return 1;
+}
+
+forward CreateDataOnPlayersTable(MySQL: DBconnection, playerid);
+public CreateDataOnPlayersTable(MySQL: DBconnection, playerid) {
+	new query[300];
+	mysql_format(DBconnection, query, sizeof query, "INSERT INTO `players` (`account_id`) VALUES ('%d')", Account[playerid][ID]);
+	mysql_tquery(DBconnection, query, "OnCreateDataOnPlayersTable", "d", playerid);
 	return 1;
 }
