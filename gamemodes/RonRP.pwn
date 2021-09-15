@@ -5,11 +5,12 @@
 #include <sscanf2>
 #include <logger>
 #include <bcrypt>
+#include <chrono>
 #include "includes/global_variables"
 
 new MySQL:conn;
 
-new Player[MAX_PLAYERS][accounts];
+new Account[MAX_PLAYERS][accounts];
 new g_MysqlRaceCheck[MAX_PLAYERS];
 
 new ServerVehicle[MAX_VEHICLES][vehicles];
@@ -43,6 +44,7 @@ public OnGameModeInit()
 {
 	SetGameModeText("Blank Script");
     ManualVehicleEngineAndLights();
+	ShowPlayerMarkers(0);
 
     new MySQLOpt: option_id = mysql_init_options();
 	mysql_set_option(option_id, AUTO_RECONNECT, true);
@@ -83,13 +85,13 @@ public OnPlayerConnect(playerid)
 	
 	// reset player data
 	static const empty_player[accounts];
-	Player[playerid] = empty_player;
+	Account[playerid] = empty_player;
 
     new string[MAX_PLAYER_NAME];
     GetPlayerName(playerid, string, sizeof string);
-    Player[playerid][Username] = string;
+    Account[playerid][Username] = string;
 
-	new ORM: AccountModel = Player[playerid][ORM_ID] = orm_create("accounts", conn);
+	new ORM: AccountModel = Account[playerid][ORM_ID] = orm_create("accounts", conn);
 
     ORMSetupAccountsTable(AccountModel, playerid);
 
@@ -103,7 +105,7 @@ public OnPlayerDisconnect(playerid, reason)
     g_MysqlRaceCheck[playerid]++;
 
 	UpdatePlayerData(playerid, reason);
-	Player[playerid][IsLoggedIn] = false;
+	Account[playerid][IsLoggedIn] = false;
 
 	despawnAllPlayerVehicles(playerid);
 	return 1;
@@ -111,11 +113,13 @@ public OnPlayerDisconnect(playerid, reason)
 
 public OnPlayerSpawn(playerid)
 {
-    if(Player[playerid][Respawned] == false) {
-		Player[playerid][Respawned] = true;
-		GivePlayerMoney(playerid, Player[playerid][Cash]);
+    if(Account[playerid][Respawned] == false) {
+		Account[playerid][Respawned] = true;
+		GivePlayerMoney(playerid, Account[playerid][Cash]);
 		getAllPlayerVehData(conn, playerid);
 	}
+	SetPlayerColor(playerid, COLOR_WHITE);
+
 	return 1;
 }
 
@@ -286,7 +290,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 			// bcrypt_hash("admin123", BCRYPT_COST, "OnPasswordHashed");
 			// Logger_Log("DIALOG_LOGIN", Logger_S("Inputtext", inputtext));
-			bcrypt_check(inputtext, Player[playerid][Password], "OnPasswordChecked", "d", playerid);
+			bcrypt_check(inputtext, Account[playerid][Password], "OnPasswordChecked", "d", playerid);
 			return 1;
 		}
 
@@ -310,7 +314,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(PlayerVehicle[playerid][listitem][isSpawned]) {
 				DestroyVehicle(PlayerVehicle[playerid][listitem][session_ID]);
 				PlayerVehicle[playerid][listitem][isSpawned] = false;
-				Player[playerid][SpawnedVehicles]--;
+				Account[playerid][SpawnedVehicles]--;
 				format(string, sizeof string, "You have stored your %s.", PlayerVehicle[playerid][listitem][Name]);
 				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
 			} else {
@@ -319,7 +323,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 				PlayerVehicle[playerid][listitem][session_ID] = vehicleid;
 				PlayerVehicle[playerid][listitem][isSpawned] = true;
-				Player[playerid][SpawnedVehicles]++;
+				Account[playerid][SpawnedVehicles]++;
 
 				format(string, sizeof string, "You have taken your %s out of your vstorage.", PlayerVehicle[playerid][listitem][Name]);
 				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
