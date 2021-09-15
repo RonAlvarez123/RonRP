@@ -12,6 +12,7 @@ new MySQL:conn;
 
 new Account[MAX_PLAYERS][accounts];
 new g_MysqlRaceCheck[MAX_PLAYERS];
+new Player[MAX_PLAYERS][players];
 
 new ServerVehicle[MAX_VEHICLES][vehicles];
 new PlayerVehicle[MAX_PLAYERS][MAX_VEHICLES_PER_PLAYER][vehicles];
@@ -59,6 +60,7 @@ public OnGameModeInit()
 	print("MySQL connection is successful.");
 
     DBSetupAccountsTable(conn);
+    DBSetupPlayersTable(conn);
     DBSetupVehiclesTable(conn);
 
     getAllServerVehicle(conn);
@@ -84,18 +86,22 @@ public OnPlayerConnect(playerid)
 	g_MysqlRaceCheck[playerid]++;
 	
 	// reset player data
-	static const empty_player[accounts];
-	Account[playerid] = empty_player;
+	static const empty_account[accounts];
+	Account[playerid] = empty_account;
+	static const empty_player[players];
+	Player[playerid] = empty_player;
 
     new string[MAX_PLAYER_NAME];
     GetPlayerName(playerid, string, sizeof string);
     Account[playerid][Username] = string;
 
 	new ORM: AccountModel = Account[playerid][ORM_ID] = orm_create("accounts", conn);
+	new ORM: PlayerModel = Player[playerid][ORM_ID] = orm_create("players", conn);
 
     ORMSetupAccountsTable(AccountModel, playerid);
+    ORMSetupPlayersTable(PlayerModel, playerid);
 
-    orm_setkey(AccountModel, "username");
+	orm_setkey(AccountModel, "username");
     orm_load(AccountModel, "OnPlayerAccountLoaded", "dd", playerid, g_MysqlRaceCheck[playerid]);
 	return 1;
 }
