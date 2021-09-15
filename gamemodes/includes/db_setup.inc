@@ -5,6 +5,13 @@ public DBSetupAccountsTable(MySQL: DBconnection) {
     return 1;
 }
 
+forward DBSetupPlayersTable(MySQL: DBconnection);
+public DBSetupPlayersTable(MySQL: DBconnection) {
+    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `players` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `job1` varchar(100) NOT NULL DEFAULT 'None', `job2` varchar(100) NOT NULL DEFAULT 'None', `material_packages` int(11) NOT NULL DEFAULT 0, `materials` int(11) NOT NULL DEFAULT 0, PRIMARY KEY (`id`))");
+    print("Players Table Setup Finished!");
+    return 1;
+}
+
 forward DBSetupVehiclesTable(MySQL: DBconnection);
 public DBSetupVehiclesTable(MySQL: DBconnection) {
     mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `vehicles` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `model` int(11) NOT NULL, `name` varchar(24) NOT NULL, `owner` varchar(24) DEFAULT NULL, `price` int(11) NOT NULL, `hasLock` tinyint(1) NOT NULL DEFAULT 0, `color1` int(11) NOT NULL DEFAULT 0, `color2` int(11) NOT NULL DEFAULT 0, `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, PRIMARY KEY (`id`))");
@@ -25,6 +32,17 @@ public ORMSetupAccountsTable(ORM: TableModel, playerid) {
 	orm_addvar_float(TableModel, Account[playerid][Z_Pos], "z");
 	orm_addvar_float(TableModel, Account[playerid][Angle], "angle");
 	orm_addvar_int(TableModel, Account[playerid][Interior], "interior");
+    return 1;
+}
+
+forward ORMSetupPlayersTable(ORM: TableModel, playerid);
+public ORMSetupPlayersTable(ORM: TableModel, playerid) {
+    orm_addvar_int(TableModel, Player[playerid][ID], "id");
+    orm_addvar_int(TableModel, Player[playerid][Account_ID], "account_id");
+	orm_addvar_string(TableModel, Player[playerid][Job1], 100, "job1");
+	orm_addvar_string(TableModel, Player[playerid][Job2], 100, "job2");
+	orm_addvar_int(TableModel, Player[playerid][Material_Packages], "material_packages");
+	orm_addvar_int(TableModel, Player[playerid][Materials], "materials");
     return 1;
 }
 
