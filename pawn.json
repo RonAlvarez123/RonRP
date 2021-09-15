@@ -11,7 +11,8 @@
 		"pBlueG/SA-MP-MySQL:R41-4",
 		"pawn-lang/YSI-Includes",
 		"Southclaws/samp-logger",
-		"lassir/bcrypt-samp:v2.2.3"
+		"lassir/bcrypt-samp:v2.2.3",
+		"Southclaws/pawn-chrono:1.1.1"
 	],
 	"local": true,
 	"runtime": {
