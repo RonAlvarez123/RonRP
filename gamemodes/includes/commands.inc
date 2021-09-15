@@ -66,7 +66,7 @@ COMMAND:engine(playerid) {
     vehicleid = GetPlayerVehicleID(playerid);
 
     new bool: isVehicleOwnedByPlayer = false, iteration;
-    for(new i = 0; i < Player[playerid][TotalVehicles]; i++) {
+    for(new i = 0; i < Account[playerid][TotalVehicles]; i++) {
         if(PlayerVehicle[playerid][i][session_ID] == vehicleid) {
             isVehicleOwnedByPlayer = true;
             iteration = i;
@@ -119,8 +119,8 @@ COMMAND:buyvehicle(playerid) {
         return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "This vehicle is not for sale.");
     }
 
-    Player[playerid][Cash] = GetPlayerMoney(playerid);
-    if(Player[playerid][Cash] < ServerVehicle[iteration][Price]) {
+    Account[playerid][Cash] = GetPlayerMoney(playerid);
+    if(Account[playerid][Cash] < ServerVehicle[iteration][Price]) {
         return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You don't have enough money to buy this vehicle.");
     }
 
@@ -146,7 +146,7 @@ COMMAND:buyvehicle(playerid) {
     vehicleZ = 13.3993;
     vehicleAngle = 173.2735;
 
-    mysql_format(conn, query, sizeof query, "INSERT INTO `vehicles` (`account_id`, `model`, `name`, `owner`, `price`, `x`, `y`, `z`, `angle`) VALUES ('%d', '%d', '%s', '%s', '%d', '%f', '%f', '%f', '%f')", Player[playerid][ID], ServerVehicle[iteration][Model], ServerVehicle[iteration][Name], Player[playerid][Username], ServerVehicle[iteration][Price], vehicleX, vehicleY, vehicleZ, vehicleAngle);
+    mysql_format(conn, query, sizeof query, "INSERT INTO `vehicles` (`account_id`, `model`, `name`, `owner`, `price`, `x`, `y`, `z`, `angle`) VALUES ('%d', '%d', '%s', '%s', '%d', '%f', '%f', '%f', '%f')", Account[playerid][ID], ServerVehicle[iteration][Model], ServerVehicle[iteration][Name], Account[playerid][Username], ServerVehicle[iteration][Price], vehicleX, vehicleY, vehicleZ, vehicleAngle);
     mysql_query(conn, query);
 
     new insert_id = cache_insert_id();
@@ -160,14 +160,14 @@ COMMAND:buyvehicle(playerid) {
 
     vehicleid = CreateVehicle(ServerVehicle[iteration][Model], vehicleX, vehicleY, vehicleZ, vehicleAngle, DEFAULT_VEHICLE_DEALERSHIP_COLOR1, DEFAULT_VEHICLE_DEALERSHIP_COLOR2, -1, 0);
     // HERE
-    new playerTotalVehicles = Player[playerid][TotalVehicles];
-    Player[playerid][TotalVehicles]++;
+    new playerTotalVehicles = Account[playerid][TotalVehicles];
+    Account[playerid][TotalVehicles]++;
 
     PlayerVehicle[playerid][playerTotalVehicles][session_ID] = vehicleid;
 
     PlayerVehicle[playerid][playerTotalVehicles][ID] = insert_id;
     PlayerVehicle[playerid][playerTotalVehicles][isSpawned] = true;
-    PlayerVehicle[playerid][playerTotalVehicles][Account_ID] = Player[playerid][ID];
+    PlayerVehicle[playerid][playerTotalVehicles][Account_ID] = Account[playerid][ID];
     PlayerVehicle[playerid][playerTotalVehicles][ORM_ID] = orm_create("vehicles", conn);
     ORMSetupPlayerVehiclesTable(PlayerVehicle[playerid][playerTotalVehicles][ORM_ID], playerid, playerTotalVehicles);
 
@@ -177,12 +177,12 @@ COMMAND:buyvehicle(playerid) {
 }
 
 COMMAND:vstorage(playerid) {
-    if(Player[playerid][TotalVehicles] <= 0) {
+    if(Account[playerid][TotalVehicles] <= 0) {
         return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You don't own any vehicle.");
     }
 
     new string[128], status[MAX_PLAYER_NAME];
-    for(new i = 0; i < Player[playerid][TotalVehicles]; i++) {
+    for(new i = 0; i < Account[playerid][TotalVehicles]; i++) {
         if(PlayerVehicle[playerid][i][isSpawned] == false) {
             format(status, sizeof status, "Stored");
         } else {

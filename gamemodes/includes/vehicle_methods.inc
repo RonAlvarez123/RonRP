@@ -81,8 +81,8 @@ public Oncreatevdealership(playerid) {
 forward OnGetAllPlayerVehData(playerid);
 public OnGetAllPlayerVehData(playerid) {
     new row_count = cache_num_rows();
-    Player[playerid][TotalVehicles] = row_count;
-    printf("cache_num_rows: Player Vehicles are %d", row_count);
+    Account[playerid][TotalVehicles] = row_count;
+    printf("cache_num_rows: Account Vehicles are %d", row_count);
 
     for(new i = 0; i < row_count; i++) {
         cache_get_value_name_int(i, "id", PlayerVehicle[playerid][i][ID]);

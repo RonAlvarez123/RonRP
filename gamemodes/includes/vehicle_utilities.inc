@@ -33,7 +33,7 @@ public getAllServerVehicle(MySQL: DBconnection) {
 forward getAllPlayerVehData(MySQL: DBconnection, playerid);
 public getAllPlayerVehData(MySQL: DBconnection, playerid) {
     new query[300];
-    mysql_format(DBconnection, query, sizeof query, "SELECT * FROM `vehicles` WHERE `account_id` = '%d'", Player[playerid][ID]);
+    mysql_format(DBconnection, query, sizeof query, "SELECT * FROM `vehicles` WHERE `account_id` = '%d'", Account[playerid][ID]);
     mysql_tquery(DBconnection, query, "OnGetAllPlayerVehData", "d", playerid);
     return 1;
 }
@@ -41,7 +41,7 @@ public getAllPlayerVehData(MySQL: DBconnection, playerid) {
 forward despawnAllPlayerVehicles(playerid);
 public despawnAllPlayerVehicles(playerid) {
     new const empty_vehicle[vehicles];
-    for(new i = 0; i < Player[playerid][TotalVehicles]; i++) {
+    for(new i = 0; i < Account[playerid][TotalVehicles]; i++) {
         if(PlayerVehicle[playerid][i][isSpawned] == true) {
             DestroyVehicle(PlayerVehicle[playerid][i][session_ID]);
         }
