@@ -1,6 +1,6 @@
 forward DBSetupAccountsTable(MySQL: DBconnection);
 public DBSetupAccountsTable(MySQL: DBconnection) {
-    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `accounts` (`id` int(11) NOT NULL AUTO_INCREMENT, `username` varchar(24) NOT NULL, `password` varchar(64) NOT NULL, `cash` int(11) NOT NULL, `kills` int(11) NOT NULL, `death` int(11) NOT NULL, `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, `interior` int(11) NOT NULL, PRIMARY KEY (`id`))");
+    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `accounts` (`id` int(11) NOT NULL AUTO_INCREMENT, `username` varchar(24) NOT NULL, `password` varchar(64) NOT NULL, `cash` int(11) NOT NULL, `kills` int(11) NOT NULL, `death` int(11) NOT NULL, `x` float NOT NULL, `y` float NOT NULL, `z` float NOT NULL, `angle` float NOT NULL, `interior` int(11) NOT NULL, `created_at` timestamp NOT NULL DEFAULT current_timestamp(), PRIMARY KEY (`id`))");
 	print("Accounts Table Setup Finished!");
     return 1;
 }
@@ -14,17 +14,17 @@ public DBSetupVehiclesTable(MySQL: DBconnection) {
 
 forward ORMSetupAccountsTable(ORM: TableModel, playerid);
 public ORMSetupAccountsTable(ORM: TableModel, playerid) {
-    orm_addvar_int(TableModel, Player[playerid][ID], "id");
-	orm_addvar_string(TableModel, Player[playerid][Username], MAX_PLAYER_NAME, "username");
-	orm_addvar_string(TableModel, Player[playerid][Password], 65, "password");
-	orm_addvar_int(TableModel, Player[playerid][Cash], "cash");
-	orm_addvar_int(TableModel, Player[playerid][Kills], "kills");
-	orm_addvar_int(TableModel, Player[playerid][Deaths], "death");
-	orm_addvar_float(TableModel, Player[playerid][X_Pos], "x");
-	orm_addvar_float(TableModel, Player[playerid][Y_Pos], "y");
-	orm_addvar_float(TableModel, Player[playerid][Z_Pos], "z");
-	orm_addvar_float(TableModel, Player[playerid][Angle], "angle");
-	orm_addvar_int(TableModel, Player[playerid][Interior], "interior");
+    orm_addvar_int(TableModel, Account[playerid][ID], "id");
+	orm_addvar_string(TableModel, Account[playerid][Username], MAX_PLAYER_NAME, "username");
+	orm_addvar_string(TableModel, Account[playerid][Password], 65, "password");
+	orm_addvar_int(TableModel, Account[playerid][Cash], "cash");
+	orm_addvar_int(TableModel, Account[playerid][Kills], "kills");
+	orm_addvar_int(TableModel, Account[playerid][Deaths], "death");
+	orm_addvar_float(TableModel, Account[playerid][X_Pos], "x");
+	orm_addvar_float(TableModel, Account[playerid][Y_Pos], "y");
+	orm_addvar_float(TableModel, Account[playerid][Z_Pos], "z");
+	orm_addvar_float(TableModel, Account[playerid][Angle], "angle");
+	orm_addvar_int(TableModel, Account[playerid][Interior], "interior");
     return 1;
 }
 
