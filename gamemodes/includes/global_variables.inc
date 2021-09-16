@@ -22,6 +22,8 @@
 #define DEFAULT_VEHICLE_DEALERSHIP_COLOR2        0
 
 #define DEFAULT_SERVER_MESSAGE_COLOR            0xFC4E03FF
+#define DEFAULT_FEEDBACK_MESSAGE_COLOR			0x42B9F5FF
+#define DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR		0xFF3A24FF
 
 #define COLOR_WHITE			0xFFFFFFFF
 
@@ -57,7 +59,9 @@ enum players {
 	Job1[100],
 	Job2[100],
 	Material_Packages,
-	Materials
+	Materials,
+
+	Checkpoints
 };
 
 enum vehicles {
