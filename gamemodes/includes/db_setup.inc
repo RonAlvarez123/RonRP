@@ -7,7 +7,7 @@ public DBSetupAccountsTable(MySQL: DBconnection) {
 
 forward DBSetupPlayersTable(MySQL: DBconnection);
 public DBSetupPlayersTable(MySQL: DBconnection) {
-    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `players` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `job1` varchar(100) NOT NULL DEFAULT 'None', `job2` varchar(100) NOT NULL DEFAULT 'None', `material_packages` int(11) NOT NULL DEFAULT 0, `materials` int(11) NOT NULL DEFAULT 0, PRIMARY KEY (`id`))");
+    mysql_tquery(DBconnection, "CREATE TABLE IF NOT EXISTS `players` (`id` int(11) NOT NULL AUTO_INCREMENT, `account_id` int(11) NOT NULL, `job1` varchar(100) NOT NULL DEFAULT 'None', `job2` varchar(100) NOT NULL DEFAULT 'None', `materials` int(11) NOT NULL DEFAULT 0, PRIMARY KEY (`id`))");
     print("Players Table Setup Finished!");
     return 1;
 }
@@ -41,7 +41,6 @@ public ORMSetupPlayersTable(ORM: TableModel, playerid) {
     orm_addvar_int(TableModel, Player[playerid][Account_ID], "account_id");
 	orm_addvar_string(TableModel, Player[playerid][Job1], 100, "job1");
 	orm_addvar_string(TableModel, Player[playerid][Job2], 100, "job2");
-	orm_addvar_int(TableModel, Player[playerid][Material_Packages], "material_packages");
 	orm_addvar_int(TableModel, Player[playerid][Materials], "materials");
     return 1;
 }
