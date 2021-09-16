@@ -114,6 +114,8 @@ public UpdatePlayerData(playerid, reason) {
 
 	orm_save(Account[playerid][ORM_ID]);
 	orm_destroy(Account[playerid][ORM_ID]);
+	orm_save(Player[playerid][ORM_ID]);
+	orm_destroy(Player[playerid][ORM_ID]);
 	return 1;
 }
 
