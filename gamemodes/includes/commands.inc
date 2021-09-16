@@ -8,28 +8,10 @@ COMMAND:getcash(playerid, params[]) {
 	return 1;
 }
 
-COMMAND:createvehicle(playerid, params[]) {
-	new vehicleNumber;
-	if(sscanf(params, "i", vehicleNumber)) {
-		return SendClientMessage(playerid, -1, "Usage: /createvehicle <vehicleID>");
-	}
-
-	new string[128];
-	new vehicleId;
-	switch(vehicleNumber) {
-		case 1: {
-			vehicleId = CreateVehicle(411, 1801.5839, -1932.4995, 13.3865, 78.3339, 0x1A32BA, 0xD41555, -1, 0);
-			format(string, sizeof string, "Vehicle Created: %d", vehicleId);
-			SendClientMessage(playerid, 0xD41555, string);
-		}
-	}
-	return 1;
-}
-
 COMMAND:createvdealership(playerid, params[]) {
     new vehicleModel, vehiclePrice;
     if(sscanf(params, "ii", vehicleModel, vehiclePrice)) {
-        return SendClientMessage(playerid, -1, "Usage: /createvdealership <vehicleModel> <vehiclePrice>");
+        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "Usage: /createvdealership <vehicleModel> <vehiclePrice>");
     }
 
     new query[300], result_count, Cache:cache_id;
@@ -41,7 +23,7 @@ COMMAND:createvdealership(playerid, params[]) {
 
     if(result_count > 0) {
         print("Already exists");
-        return SendClientMessage(playerid, -1, "SERVER: Oncreatevdealership - That vehicle is already for sale.");
+        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "SERVER: Oncreatevdealership - That vehicle is already for sale.");
     }
 
     print("Pwede i-create");
@@ -59,7 +41,7 @@ COMMAND:createvdealership(playerid, params[]) {
 
 COMMAND:engine(playerid) {
     if(!IsPlayerInAnyVehicle(playerid)) {
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You are not in a vehicle");
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You are not in a vehicle");
     }
 
     new vehicleid, string[128];
@@ -82,9 +64,9 @@ COMMAND:engine(playerid) {
 
     if(isVehicleOwnedByPlayer == false && isVehicleOwnedByServer == true) {
         format(string, sizeof string, "This vehicle is owned by %s.", ServerVehicle[iteration][Owner], vehicleid);
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, string);
     } else if(isVehicleOwnedByPlayer == false && isVehicleOwnedByServer == false) {
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "This vehicle is owned by another player.");
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "This vehicle is owned by another player.");
     }
 
     new engine, lights, alarm, doors, bonnet, boot, objective;
@@ -102,7 +84,7 @@ COMMAND:engine(playerid) {
 
 COMMAND:buyvehicle(playerid) {
     if(IsPlayerInAnyVehicle(playerid) <= 0) {
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You are not in any vehicle.");
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You are not in any vehicle.");
     }
 
     new vehicleid;
@@ -116,12 +98,12 @@ COMMAND:buyvehicle(playerid) {
     }
 
     if(iteration == -1) {
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "This vehicle is not for sale.");
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "This vehicle is not for sale.");
     }
 
     Account[playerid][Cash] = GetPlayerMoney(playerid);
     if(Account[playerid][Cash] < ServerVehicle[iteration][Price]) {
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You don't have enough money to buy this vehicle.");
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You don't have enough money to buy this vehicle.");
     }
 
     new query[300], Float:vehicleX, Float:vehicleY, Float:vehicleZ, Float:vehicleAngle;
@@ -178,7 +160,7 @@ COMMAND:buyvehicle(playerid) {
 
 COMMAND:vstorage(playerid) {
     if(Account[playerid][TotalVehicles] <= 0) {
-        return SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, "You don't own any vehicle.");
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You don't own any vehicle.");
     }
 
     new string[128], status[MAX_PLAYER_NAME];
@@ -214,10 +196,47 @@ COMMAND:changevehiclecolor(playerid, params[]) {
     return 1;
 }
 
-COMMAND:getmats(playerid) {
-    if(!IsPlayerInRangeOfPoint(playerid, 2, 1805.2272, -1904.5685, 13.4001)) {
-        return SendClientMessage(playerid, -1, "You are out of range.");
+COMMAND:park(playerid) {
+    if(IsPlayerInAnyVehicle(playerid) <= 0) {
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You are not in any vehicle.");
     }
-    SendClientMessage(playerid, -1, "You can get mats.");
+
+    new vehicleid = GetPlayerVehicleID(playerid), bool: isVehicleOwnedByPlayer = false, iteration;
+    for(new i = 0; i < Account[playerid][TotalVehicles]; i++) {
+        if(PlayerVehicle[playerid][i][session_ID] == vehicleid) {
+            isVehicleOwnedByPlayer = true;
+            iteration = i;
+        }
+    }
+
+    if(isVehicleOwnedByPlayer == false) {
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You don't own this vehicle.");
+    }
+
+    GetVehiclePos(PlayerVehicle[playerid][iteration][session_ID], PlayerVehicle[playerid][iteration][X_Pos], PlayerVehicle[playerid][iteration][Y_Pos], PlayerVehicle[playerid][iteration][Z_Pos]);
+    GetVehicleZAngle(PlayerVehicle[playerid][iteration][session_ID], PlayerVehicle[playerid][iteration][Angle]);
+    orm_save(PlayerVehicle[playerid][iteration][ORM_ID]);
+    SendClientMessage(playerid, DEFAULT_FEEDBACK_MESSAGE_COLOR, "You have parked your vehicle.");
+    return 1;
+}
+
+COMMAND:getmats(playerid) {
+    if(!IsPlayerInRangeOfPoint(playerid, 2, 2392.0537, -2008.1272, 13.5537)) {
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You are not in a materials pickup.");
+    }
+
+    if(Player[playerid][Checkpoints] > 0) {
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You already have an existing checkpoint. Kill your existing checkpoint first.");
+    }
+
+    if(Player[playerid][Material_Packages] > 0) {
+        return SendClientMessage(playerid, DEFAULT_UNSUCCESSFUL_MESSAGE_COLOR, "You already have material packages. Drop your material packages first.");
+    }
+
+    Player[playerid][Material_Packages] = 25;
+    GivePlayerMoney(playerid, -75);
+    SetPlayerCheckpoint(playerid, 2287.7383, -1107.8683, 37.9766, 4);
+    Player[playerid][Checkpoints] = 1;
+    
     return 1;
 }
