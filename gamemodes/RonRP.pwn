@@ -65,9 +65,8 @@ public OnGameModeInit()
 
     getAllServerVehicle(conn);
 
-	// AddPlayerClass(299,1805.2272,-1904.5685,13.4001,92.8548,0,0,0,0,0,0); // objectposition
-	CreatePickup(1239, 1, 1805.2272, -1904.5685, 13.4001, 0);
-	Create3DTextLabel("/getmats", 0xFF0000FF, 1805.2272, -1904.5685, 13.4001, 10, 0, 0);
+	CreatePickup(1239, 1, 2392.0537, -2008.1272, 13.5537, 0);
+	Create3DTextLabel("/getmats", 0xFF0000FF, 2392.0537, -2008.1272, 13.5537, 10, 0, 0);
 	return 1;
 }
 
@@ -166,6 +165,22 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 
 public OnPlayerEnterCheckpoint(playerid)
 {
+	new string[128], factory_materials;
+	if(IsPlayerInRangeOfPoint(playerid, 4, 2287.7383, -1107.8683, 37.9766)) {
+		DisablePlayerCheckpoint(playerid);
+		Player[playerid][Checkpoints] = 0;
+
+		factory_materials = Player[playerid][Material_Packages] * 10;
+		Player[playerid][Materials] += factory_materials;
+		Player[playerid][Material_Packages] = 0;
+
+		format(string, sizeof string, "The factory gave you %d materials for delivering material packages", factory_materials);
+		SendClientMessage(playerid, DEFAULT_FEEDBACK_MESSAGE_COLOR, string);
+
+		format(string, sizeof string, "You have now %d material packages and %d materials.", Player[playerid][Material_Packages], Player[playerid][Materials]);
+		SendClientMessage(playerid, -1, string);
+    }
+
 	return 1;
 }
 
@@ -322,7 +337,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				PlayerVehicle[playerid][listitem][isSpawned] = false;
 				Account[playerid][SpawnedVehicles]--;
 				format(string, sizeof string, "You have stored your %s.", PlayerVehicle[playerid][listitem][Name]);
-				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
+				SendClientMessage(playerid, DEFAULT_FEEDBACK_MESSAGE_COLOR, string);
 			} else {
 				new vehicleid;
 				vehicleid = CreateVehicle(PlayerVehicle[playerid][listitem][Model], PlayerVehicle[playerid][listitem][X_Pos], PlayerVehicle[playerid][listitem][Y_Pos], PlayerVehicle[playerid][listitem][Z_Pos], PlayerVehicle[playerid][listitem][Angle], strval(PlayerVehicle[playerid][listitem][Color1]), strval(PlayerVehicle[playerid][listitem][Color2]), -1, 0);
@@ -331,8 +346,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				PlayerVehicle[playerid][listitem][isSpawned] = true;
 				Account[playerid][SpawnedVehicles]++;
 
-				format(string, sizeof string, "You have taken your %s out of your vstorage.", PlayerVehicle[playerid][listitem][Name]);
-				SendClientMessage(playerid, DEFAULT_SERVER_MESSAGE_COLOR, string);
+				format(string, sizeof string, "Your %s have spawned in its last parking location.", PlayerVehicle[playerid][listitem][Name]);
+				SendClientMessage(playerid, DEFAULT_FEEDBACK_MESSAGE_COLOR, string);
 			}
 		}
 
